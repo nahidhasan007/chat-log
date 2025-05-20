@@ -17,9 +17,10 @@ def parse_chat_log(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         for line in f:
             line = line.strip()
-            if line.startswith("User:"):
+            line_lower = line.lower()
+            if line_lower.startswith("user:"):
                 user_messages.append(line[5:].strip())
-            elif line.startswith("AI:"):
+            elif line_lower.startswith("ai:"):
                 ai_messages.append(line[3:].strip())
 
     return user_messages, ai_messages
@@ -36,6 +37,8 @@ def generate_summary(stats, keywords):
     print(f"- Total messages: {stats['total_messages']}")
     print(f"- User messages: {stats['user_messages']}, AI messages: {stats['ai_messages']}")
     print(f"- Most common keywords: {', '.join(keywords)}")
+    topic_summary = ', '.join(keywords[:3])
+    print(f"- The user asked mainly about {topic_summary}.")
 
 if __name__ == "__main__":
     filepath = choose_file()
@@ -44,3 +47,4 @@ if __name__ == "__main__":
         stats = get_message_stats(user_msgs, ai_msgs)
         keywords = extract_tfidf_keywords(user_msgs + ai_msgs)
         generate_summary(stats, keywords)
+
